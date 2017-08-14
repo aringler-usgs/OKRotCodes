@@ -1,0 +1,88 @@
+Event time: 2017 119 09:58:58
+Magnitude: 2.7 ML
+Depth: 8425.0
+Latitude:36.6985
+Longitude:-97.6686
+Azimuth: 75.404222665
+Back azimuth: 256.044191504
+Distance: 99.1402115743
+Peak Radial 00 Rotation: 1.6480909945e-08
+Peak Transverse 00 Rotation: 2.02952625692e-08
+Peak Vertical 00 Rotation: 1.89143116329e-08
+Peak Radial 00 Rotation Rate: 1.2619136683e-06
+Peak Transverse 00 Rotation Rate: 1.27591275073e-06
+Peak Vertical 00 Rotation Rate: 1.04333140295e-06
+Peak 00 PGWZ: 1.63688338965e-08
+Peak 00 PGWT: 1.90415012765e-08
+PGwRsH00: 1.68542171172e-06
+PGwRsZ00: 1.22038796899e-06
+SNR 00 EJR: 1.86506256506
+SNR 00 EJT: 2.14039404095
+SNR 00 EJZ: 3.53277170369
+Peak Radial 10 Rotation: 1.96974362362e-08
+Peak Transverse 10 Rotation: 2.12810372723e-08
+Peak Vertical 10 Rotation: 1.97622604029e-08
+Peak Radial 10 Rotation Rate: 1.38409473926e-06
+Peak Transverse 10 Rotation Rate: 1.09015613811e-06
+Peak Vertical 10 Rotation Rate: 9.6684558988e-07
+Peak 10 PGWZ: 1.60199744993e-08
+Peak 10 PGWT: 1.91653793775e-08
+PGwRsH10: 1.53987618866e-06
+PGwRsZ10: 1.33073397293e-06
+SNR 10 EJR: 1.9697503503
+SNR 10 EJT: 2.56114608316
+SNR 10 EJZ: 3.4642525446
+Mean Spectral Ratio 00 Radial: 5.94693493898
+Peak Frequency Ratio 00 Radial: 2.978515625
+Mean Spectral Ratio 00 : -125.189783728
+Mean Spectral Ratio 10 Radial: 5.43263267222
+Peak Frequency Ratio 10 Radial: 2.9541015625
+Mean Spectral 00 Radial: -125.189783728
+Mean Spectral 00 Radial Translational: -125.189783728
+Mean Spectral 00 Radial Rotational: -131.136718667
+Mean Spectral 10 Radial Rotational: -130.6224164
+Frequency Peak 00 Radial: 3.2470703125
+Frequency Peak 00 Radial Rotational: 9.9853515625
+Frequency Peak 10 Radial Rotational: 9.9853515625
+Peak Spectral Value 00 Rotational Radial: -123.306758609
+Peak Spectral Value 10 Rotational Radial: -123.10643719
+Peak Spectral Value 00 Translational Radial: -116.105797932
+Peak Spectral Frequency Value 00 Rotational Radial: 9.9853515625
+Peak Spectral Frequency Value 10 Rotational Radial: 9.9853515625
+Peak Spectral Frequency Value 00 Translational Radial: 3.2470703125
+Mean Spectral Ratio 00 Transverse: 5.13687334168
+Peak Frequency Ratio 00 Transverse: 3.0029296875
+Mean Spectral Ratio 00 : -125.060368468
+Mean Spectral Ratio 10 Transverse: 5.18002024867
+Peak Frequency Ratio 10 Transverse: 3.076171875
+Mean Spectral 00 Transverse: -125.060368468
+Mean Spectral 00 Transverse Translational: -125.060368468
+Mean Spectral 00 Transverse Rotational: -130.197241809
+Mean Spectral 10 Transverse Rotational: -130.240388716
+Frequency Peak 00 Transverse: 3.0517578125
+Frequency Peak 00 Transverse Rotational: 9.9853515625
+Frequency Peak 10 Transverse Rotational: 9.9853515625
+Peak Spectral Value 00 Rotational Transverse: -123.312892995
+Peak Spectral Value 10 Rotational Transverse: -123.817963827
+Peak Spectral Value 00 Translational Transverse: -114.474200605
+Peak Spectral Frequency Value 00 Rotational Transverse: 9.9853515625
+Peak Spectral Frequency Value 10 Rotational Transverse: 9.9853515625
+Peak Spectral Frequency Value 00 Translational Transverse: 3.0517578125
+Mean Spectral Ratio 00 Vertical: -5.04299186618
+Peak Frequency Ratio 00 Vertical: 4.833984375
+Mean Spectral Ratio 00 : -130.071456616
+Mean Spectral Ratio 10 Vertical: -1.80497683906
+Peak Frequency Ratio 10 Vertical: 1.171875
+Mean Spectral 00 Vertical: -130.071456616
+Mean Spectral 00 Vertical Translational: -130.071456616
+Mean Spectral 00 Vertical Rotational: -125.028464749
+Mean Spectral 10 Vertical Rotational: -128.266479777
+Frequency Peak 00 Vertical: 5.0537109375
+Frequency Peak 00 Vertical Rotational: 1.46484375
+Frequency Peak 10 Vertical Rotational: 1.46484375
+Peak Spectral Value 00 Rotational Vertical: -116.900825124
+Peak Spectral Value 10 Rotational Vertical: -122.059158087
+Peak Spectral Value 00 Translational Vertical: -119.91692397
+Peak Spectral Frequency Value 00 Rotational Vertical: 1.46484375
+Peak Spectral Frequency Value 10 Rotational Vertical: 1.46484375
+Peak Spectral Frequency Value 00 Translational Vertical: 5.0537109375
