@@ -1,0 +1,99 @@
+Event time: 2017 139 00:18:58
+Magnitude: 2.7 ML
+Depth: 4808.0
+Latitude:36.6972
+Longitude:-98.4308
+Azimuth: 48.8185773424
+Back azimuth: 229.004212552
+Distance: 36.9788743294
+Peak Radial 00 Rotation: 3.67756946017e-08
+Peak Transverse 00 Rotation: 4.46735374924e-08
+Peak Vertical 00 Rotation: 4.93316788196e-08
+Peak Radial 00 Rotation Rate: 2.44431233596e-06
+Peak Transverse 00 Rotation Rate: 3.02942335172e-06
+Peak Vertical 00 Rotation Rate: 2.2673395116e-06
+Peak 00 PGWZ: 4.74999750009e-08
+Peak 00 PGWT: 4.34063201675e-08
+PGwRsH00: 2.83771201743e-06
+PGwRsZ00: 2.30323910249e-06
+SNR 00 EJR: 0.914625344555
+SNR 00 EJT: 1.46337097087
+SNR 00 EJZ: 1.84691804015
+Peak Radial 10 Rotation: 3.52286166966e-08
+Peak Transverse 10 Rotation: 4.45869796809e-08
+Peak Vertical 10 Rotation: 4.93193914764e-08
+Peak Radial 10 Rotation Rate: 2.40675878744e-06
+Peak Transverse 10 Rotation Rate: 2.72028010942e-06
+Peak Vertical 10 Rotation Rate: 2.07551988131e-06
+Peak 10 PGWZ: 4.82861949402e-08
+Peak 10 PGWT: 3.72310635581e-08
+PGwRsH10: 2.63390584756e-06
+PGwRsZ10: 2.17001907643e-06
+SNR 10 EJR: 0.854013368555
+SNR 10 EJT: 1.42979352272
+SNR 10 EJZ: 1.87835201617
+Peak Radial 00 Translation: 1.07078677674e-06
+Peak Transverse 00 Translation: 1.72402865258e-06
+Peak Vertical 00 Translation: 4.38635948201e-07
+Peak Radial 00 Translation Rate: 2.52112824289e-05
+Peak Transverse 00 Translation Rate: 4.24122151573e-05
+Peak Vertical 00 Translation Rate: 2.18817799055e-05
+PGVH: 3.21964006164e-05
+PGVZ: 2.00604853123e-05
+SNR 00 HHR: 2.77441897068
+SNR 00 HHT: 2.31354011595
+SNR 00 HHZ: 1.16320340195
+Mean Spectral Ratio 00 Radial: 22.6971214028
+Peak Frequency Ratio 00 Radial: 2.978515625
+Mean Spectral Ratio 00 : -99.2524798415
+Mean Spectral Ratio 10 Radial: 24.4507566383
+Peak Frequency Ratio 10 Radial: 1.904296875
+Mean Spectral 00 Radial: -99.2524798415
+Mean Spectral 00 Radial Translational: -99.2524798415
+Mean Spectral 00 Radial Rotational: -121.949601244
+Mean Spectral 10 Radial Rotational: -123.70323648
+Frequency Peak 00 Radial: 3.076171875
+Frequency Peak 00 Radial Rotational: 9.9853515625
+Frequency Peak 10 Radial Rotational: 9.9853515625
+Peak Spectral Value 00 Rotational Radial: -115.54226889
+Peak Spectral Value 10 Rotational Radial: -116.051620103
+Peak Spectral Value 00 Translational Radial: -93.7730111456
+Peak Spectral Frequency Value 00 Rotational Radial: 9.9853515625
+Peak Spectral Frequency Value 10 Rotational Radial: 9.9853515625
+Peak Spectral Frequency Value 00 Translational Radial: 3.076171875
+Mean Spectral Ratio 00 Transverse: 26.4427045488
+Peak Frequency Ratio 00 Transverse: 1.9287109375
+Mean Spectral Ratio 00 : -97.6870913527
+Mean Spectral Ratio 10 Transverse: 27.8457593051
+Peak Frequency Ratio 10 Transverse: 1.953125
+Mean Spectral 00 Transverse: -97.6870913527
+Mean Spectral 00 Transverse Translational: -97.6870913527
+Mean Spectral 00 Transverse Rotational: -124.129795902
+Mean Spectral 10 Transverse Rotational: -125.532850658
+Frequency Peak 00 Transverse: 3.125
+Frequency Peak 00 Transverse Rotational: 9.9853515625
+Frequency Peak 10 Transverse Rotational: 9.9853515625
+Peak Spectral Value 00 Rotational Transverse: -114.111574321
+Peak Spectral Value 10 Rotational Transverse: -115.140181864
+Peak Spectral Value 00 Translational Transverse: -92.2407390694
+Peak Spectral Frequency Value 00 Rotational Transverse: 9.9853515625
+Peak Spectral Frequency Value 10 Rotational Transverse: 9.9853515625
+Peak Spectral Frequency Value 00 Translational Transverse: 3.125
+Mean Spectral Ratio 00 Vertical: 15.5364081461
+Peak Frequency Ratio 00 Vertical: 1.9287109375
+Mean Spectral Ratio 00 : -103.825347939
+Mean Spectral Ratio 10 Vertical: 18.8632885093
+Peak Frequency Ratio 10 Vertical: 1.8798828125
+Mean Spectral 00 Vertical: -103.825347939
+Mean Spectral 00 Vertical Translational: -103.825347939
+Mean Spectral 00 Vertical Rotational: -119.361756085
+Mean Spectral 10 Vertical Rotational: -122.688636448
+Frequency Peak 00 Vertical: 9.9853515625
+Frequency Peak 00 Vertical Rotational: 9.9853515625
+Frequency Peak 10 Vertical Rotational: 7.763671875
+Peak Spectral Value 00 Rotational Vertical: -116.242163177
+Peak Spectral Value 10 Rotational Vertical: -117.474920862
+Peak Spectral Value 00 Translational Vertical: -94.6121060879
+Peak Spectral Frequency Value 00 Rotational Vertical: 9.9853515625
+Peak Spectral Frequency Value 10 Rotational Vertical: 7.763671875
+Peak Spectral Frequency Value 00 Translational Vertical: 9.9853515625

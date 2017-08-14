@@ -1,0 +1,88 @@
+Event time: 2017 144 03:47:34
+Magnitude: 3.1 ML
+Depth: 7204.0
+Latitude:36.5319
+Longitude:-98.9705
+Azimuth: 286.317483493
+Back azimuth: 106.181692956
+Distance: 21.2996136577
+Peak Radial 00 Rotation: 2.60984501934e-07
+Peak Transverse 00 Rotation: 1.7615228358e-07
+Peak Vertical 00 Rotation: 1.75388777309e-07
+Peak Radial 00 Rotation Rate: 1.49445141572e-05
+Peak Transverse 00 Rotation Rate: 9.69556560198e-06
+Peak Vertical 00 Rotation Rate: 8.8407619817e-06
+Peak 00 PGWZ: 1.82300138514e-07
+Peak 00 PGWT: 1.59978565591e-07
+PGwRsH00: 1.11500210532e-05
+PGwRsZ00: 8.66607614901e-06
+SNR 00 EJR: 8.46351960548
+SNR 00 EJT: 8.35496011952
+SNR 00 EJZ: 13.795061521
+Peak Radial 10 Rotation: 2.72223360567e-07
+Peak Transverse 10 Rotation: 1.94598361063e-07
+Peak Vertical 10 Rotation: 1.69925016581e-07
+Peak Radial 10 Rotation Rate: 1.54628415739e-05
+Peak Transverse 10 Rotation Rate: 1.03948796586e-05
+Peak Vertical 10 Rotation Rate: 9.32514716174e-06
+Peak 10 PGWZ: 1.93166597199e-07
+Peak 10 PGWT: 1.65568568947e-07
+PGwRsH10: 1.18671413308e-05
+PGwRsZ10: 9.67159337392e-06
+SNR 10 EJR: 9.36561652317
+SNR 10 EJT: 8.84866293025
+SNR 10 EJZ: 16.362270544
+Mean Spectral Ratio 00 Radial: -1.44917492906
+Peak Frequency Ratio 00 Radial: 2.783203125
+Mean Spectral Ratio 00 : -116.294333846
+Mean Spectral Ratio 10 Radial: -0.836275243882
+Peak Frequency Ratio 10 Radial: 2.7587890625
+Mean Spectral 00 Radial: -116.294333846
+Mean Spectral 00 Radial Translational: -116.294333846
+Mean Spectral 00 Radial Rotational: -114.845158917
+Mean Spectral 10 Radial Rotational: -115.458058602
+Frequency Peak 00 Radial: 2.8076171875
+Frequency Peak 00 Radial Rotational: 9.9853515625
+Frequency Peak 10 Radial Rotational: 5.8837890625
+Peak Spectral Value 00 Rotational Radial: -105.977898078
+Peak Spectral Value 10 Rotational Radial: -106.229968808
+Peak Spectral Value 00 Translational Radial: -98.7587141985
+Peak Spectral Frequency Value 00 Rotational Radial: 9.9853515625
+Peak Spectral Frequency Value 10 Rotational Radial: 5.8837890625
+Peak Spectral Frequency Value 00 Translational Radial: 2.8076171875
+Mean Spectral Ratio 00 Transverse: -2.85034698248
+Peak Frequency Ratio 00 Transverse: 2.9541015625
+Mean Spectral Ratio 00 : -116.749772574
+Mean Spectral Ratio 10 Transverse: -0.923310533556
+Peak Frequency Ratio 10 Transverse: 2.9052734375
+Mean Spectral 00 Transverse: -116.749772574
+Mean Spectral 00 Transverse Translational: -116.749772574
+Mean Spectral 00 Transverse Rotational: -113.899425592
+Mean Spectral 10 Transverse Rotational: -115.82646204
+Frequency Peak 00 Transverse: 2.83203125
+Frequency Peak 00 Transverse Rotational: 6.2744140625
+Frequency Peak 10 Transverse Rotational: 6.494140625
+Peak Spectral Value 00 Rotational Transverse: -107.245711137
+Peak Spectral Value 10 Rotational Transverse: -107.361943254
+Peak Spectral Value 00 Translational Transverse: -102.76864485
+Peak Spectral Frequency Value 00 Rotational Transverse: 6.2744140625
+Peak Spectral Frequency Value 10 Rotational Transverse: 6.494140625
+Peak Spectral Frequency Value 00 Translational Transverse: 2.83203125
+Mean Spectral Ratio 00 Vertical: -10.8005265946
+Peak Frequency Ratio 00 Vertical: 1.7822265625
+Mean Spectral Ratio 00 : -124.098570928
+Mean Spectral Ratio 10 Vertical: -9.01359852012
+Peak Frequency Ratio 10 Vertical: 1.66015625
+Mean Spectral 00 Vertical: -124.098570928
+Mean Spectral 00 Vertical Translational: -124.098570928
+Mean Spectral 00 Vertical Rotational: -113.298044333
+Mean Spectral 10 Vertical Rotational: -115.084972408
+Frequency Peak 00 Vertical: 5.0048828125
+Frequency Peak 00 Vertical Rotational: 6.201171875
+Frequency Peak 10 Vertical Rotational: 9.5458984375
+Peak Spectral Value 00 Rotational Vertical: -108.636415277
+Peak Spectral Value 10 Rotational Vertical: -108.567300982
+Peak Spectral Value 00 Translational Vertical: -113.695413919
+Peak Spectral Frequency Value 00 Rotational Vertical: 6.201171875
+Peak Spectral Frequency Value 10 Rotational Vertical: 9.5458984375
+Peak Spectral Frequency Value 00 Translational Vertical: 5.0048828125
