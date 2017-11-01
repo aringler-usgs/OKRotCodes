@@ -57,18 +57,28 @@ distance = getVars('Distance')
 
 pT00 = getVars('Peak Vertical 00 Rotation:')
 pT10 = getVars('Peak Vertical 10 Rotation:')
-
+pT00R = getVars('Peak Vertical 00 Rotation Rate:')
+pT10R = getVars('Peak Vertical 10 Rotation Rate:')
 
 mags = getVars('Magnitude')
 
 
 p00RT = getVars('Peak Radial 00 Translation Rate:')
 p00TT = getVars('Peak Transverse 00 Translation Rate:')
+p00RTR = getVars('Peak Radial 00 Translation RateRate:')
+p00TTR = getVars('Peak Transverse 00 Translation RateRate:')
 
 PGV = []
 for pair in zip(p00RT, p00TT):
     PGV.append(max(pair))
 PGV = np.asarray(PGV)
+
+
+PGA = []
+for pair in zip(p00RTR, p00TTR):
+    PGA.append(max(pair))
+PGA = np.asarray(PGA)
+
 
 mos = []
 for mag in mags:
@@ -88,28 +98,55 @@ for pair in zip(PGV, pT10):
     
 c=np.mean(cs)
 
+cs2 =[]
+for pair in zip(PGA, pT00R):
+    cs2.append(pair[0]/(2*pair[1]))
+
+for pair in zip(PGA, pT10R):
+    cs2.append(pair[0]/(2*pair[1]))
+    
+c2=np.mean(cs2)
 
 
-fig =plt.figure(2, figsize=(8,8))
-ax =plt.subplot(111)
+
+fig =plt.figure(2, figsize=(12,12))
+ax =plt.subplot(121)
 ax.scatter(np.log10(mos[distance >50.]),PGV[distance >50.]/(2*c),marker='v', label='Scaled PGV $>$ 50 km', s=35, color=(0.,0.,0.0))
 ax.scatter(np.log10(mos[distance >50.]),pT00[distance >50.], marker='v', label='PG$\omega$ 00 $>$ 50 km', s=35, color=(230./255., 159./255., 0.))
 ax.scatter(np.log10(mos[distance >50.]),pT10[distance >50.], marker='v', label='PG$\omega$ 10 $>$ 50 km', s=35, color=(86./255., 180./255., 33./255.))
 ax.scatter(np.log10(mos[distance <=50.]),PGV[distance <=50.]/(2*c),  label='Scaled PGV $\leq$ 50 km', s=35, color=(0., 158./255., 115./255.))
-ax.scatter(np.log10(mos[distance <=50.]),pT00[distance <=50.],  label='PG$\omega$ 00 $\leq$ 50 km', s=35, color=(240./255., 228./255., 66./255.))
+ax.scatter(np.log10(mos[distance <=50.]),pT00[distance <=50.],  label='PG$\omega$ 00 $\leq$ 50 km', s=35, color=(213./255., 94./255., 0./255.))
 ax.scatter(np.log10(mos[distance <=50.]),pT10[distance <=50.],  label='PG$\omega$ 10 $\leq$ 50 km', s=35, color=(0., 114./255., 178./255.))
 ax.set_yscale("log")
 plt.ylim((10**-9,10**-3))
 #plt.semilogy(distance,np.abs(newval),'.',label='Theoretical')
-plt.xlabel('Seismic Momoment (log(dyne$\cdot$cm))')
-plt.ylabel('Peak Ground Rotation (Radians)')
+plt.xlabel('Seismic Moment (log($10^{-7} N \cdot$m))')
+plt.ylabel('Peak Ground Rotation (radians)')
 plt.legend(loc='upper left')
 plt.title('Apparent c= ' + str(int(c)) + '$\pm$' + str(int(np.std(cs))) + ' (m/s)')
+
+ax =plt.subplot(122)
+ax.scatter(np.log10(mos[distance >50.]),PGA[distance >50.]/(2*c2),marker='v', label='Scaled PGA $>$ 50 km', s=35, color=(0.,0.,0.0))
+ax.scatter(np.log10(mos[distance >50.]),pT00R[distance >50.], marker='v', label='PG$\dot{\omega}$ 00 $>$ 50 km', s=35, color=(230./255., 159./255., 0.))
+ax.scatter(np.log10(mos[distance >50.]),pT10R[distance >50.], marker='v', label='PG$\dot{\omega}$ 10 $>$ 50 km', s=35, color=(86./255., 180./255., 33./255.))
+ax.scatter(np.log10(mos[distance <=50.]),PGA[distance <=50.]/(2*c2),  label='Scaled PGA $\leq$ 50 km', s=35, color=(0., 158./255., 115./255.))
+ax.scatter(np.log10(mos[distance <=50.]),pT00R[distance <=50.],  label='PG$\dot{\omega}$ 00 $\leq$ 50 km', s=35, color=(213./255., 94./255., 0./255.))
+ax.scatter(np.log10(mos[distance <=50.]),pT10R[distance <=50.],  label='PG$\dot{\omega}$ 10 $\leq$ 50 km', s=35, color=(0., 114./255., 178./255.))
+ax.set_yscale("log")
+plt.ylim((10**-8,10**-2))
+#plt.semilogy(distance,np.abs(newval),'.',label='Theoretical')
+plt.xlabel('Seismic Moment (log($10^{-7} N \cdot$m))')
+plt.ylabel('Peak Ground Rotation Rate (radians/s)')
+plt.legend(loc='upper left')
+plt.title('Apparent c= ' + str(int(c2)) + '$\pm$' + str(int(np.std(cs2))) + ' (m/s)')
+
+
+plt.tight_layout()
+
 plt.savefig('PGW_PGV.jpg', format='jpeg', dpi=400)
 plt.savefig('PGW_PGV.pdf',format='pdf', dpi=400)
 plt.clf()
 plt.close()
-
 
 
 
@@ -283,19 +320,58 @@ pgwH10 = getVars('PGwRsH10:')
 pgwZ10 = getVars('PGwRsZ10:')
 pgVH = getVars('PGVH:')
 pgVZ = getVars('PGVZ:')
+
+pgAH = getVars('PGAH:')
+pgAZ = getVars('PGAZ:')
+
+
 mags = getVars('Magnitude')
 events = getEvent()
 
 
 
-fig = plt.figure(1, figsize=(8,8))
-plt.loglog(pgwH00, pgVZ ,'.', markersize=14.,label='PGV$_Z$ vs. 00 PG$\dot{\omega}_H$', color=(0., 0., 0.))
-plt.loglog(pgwH10, pgVZ ,'.', markersize=14., label='PGV$_Z$ vs. 10 PG$\dot{\omega}_H$', color=(230./255., 159./255., 0.))
-plt.loglog(pgwZ00, pgVH, '+', markersize=14., label='PGV$_H$ vs. 00 PG$\dot{\omega}_Z$', color=(86./255.,180./255.,233./255.))
-plt.loglog(pgwZ10, pgVH, '+', markersize=14., label='PGV$_H$ vs. 10 PG$\dot{\omega}_Z$', color=(0.,158./255.,115./255.))
+fig = plt.figure(1, figsize=(12,12))
+plt.subplot(121)
+plt.loglog(pgVZ, pgwH00, '.', markersize=14.,label='PGV$_Z$ vs. 00 PG$\dot{\omega}_H$', color=(0., 0., 0.))
+plt.loglog(pgVZ, pgwH10, '.', markersize=14., label='PGV$_Z$ vs. 10 PG$\dot{\omega}_H$', color=(230./255., 159./255., 0.))
+plt.loglog(pgVH, pgwZ00,'+', markersize=14., label='PGV$_H$ vs. 00 PG$\dot{\omega}_Z$', color=(86./255.,180./255.,233./255.))
+plt.loglog(pgVH, pgwZ10, '+', markersize=14., label='PGV$_H$ vs. 10 PG$\dot{\omega}_Z$', color=(0.,158./255.,115./255.))
 plt.legend()
-plt.xlabel('Peak Ground Velocity (m/s)')
-plt.ylabel('Peak Ground Rotation Rate (Radians/s)')
+plt.xlabel('Peak Ground Velocity ($m/s$)')
+plt.ylabel('Peak Ground Rotation Rate ($radians/s$)')
+
+plt.subplot(122)
+plt.loglog(pgAZ, pgwH00, '.', markersize=14.,label='PGA$_Z$ vs. 00 PG$\dot{\omega}_H$', color=(0., 0., 0.))
+plt.loglog(pgAZ, pgwH10, '.', markersize=14., label='PGA$_Z$ vs. 10 PG$\dot{\omega}_H$', color=(230./255., 159./255., 0.))
+plt.loglog(pgAH, pgwZ00,'+', markersize=14., label='PGA$_H$ vs. 00 PG$\dot{\omega}_Z$', color=(86./255.,180./255.,233./255.))
+plt.loglog(pgAH, pgwZ10, '+', markersize=14., label='PGA$_H$ vs. 10 PG$\dot{\omega}_Z$', color=(0.,158./255.,115./255.))
+plt.legend()
+plt.xlabel('Peak Ground Acceleration ($m/s^2$)')
+plt.ylabel('Peak Ground Rotation Rate ($radians/s$)')
+
+
+AZ00 = np.poly1d(np.polyfit(pgAZ, pgwH00*1000.,1))
+AZ10 = np.poly1d(np.polyfit(pgAZ,pgwH10*1000.,1))
+AH00 = np.poly1d(np.polyfit(pgAH,pgwZ00*1000.,1))
+AH10 = np.poly1d(np.polyfit(pgAH, pgwZ10*1000.,1))
+VZ00 = np.poly1d(np.polyfit(pgVZ, pgwH00,1))
+VZ10 = np.poly1d(np.polyfit(pgVZ,pgwH10,1))
+VH00 = np.poly1d(np.polyfit(pgVH,pgwZ00,1))
+VH10 = np.poly1d(np.polyfit(pgVH, pgwZ10,1))
+
+
+print('########################################################################3')
+print(AZ00)
+print(AZ10)
+print(AH00)
+print(AH10)
+print(VZ00)
+print(VZ10)
+print(VH00)
+print(VH10)
+print('########################################################################3')
+
+
 plt.savefig('PGRVSPGV.jpg',format='jpeg')
 plt.savefig('PGRVSPGV.pdf', format='pdf')
 plt.clf()
@@ -347,13 +423,13 @@ distance = getVars('Distance')
 
 
 
-pgwH00=pgwH00[distance>10.]*10**9
-pgwH10=pgwH10[distance>10.]*10**9
-pgwZ10=pgwZ10[distance>10.]*10**9
-pgwZ00=pgwZ00[distance>10.]*10**9
-pgVH = pgVH[distance>10.]*10**9
-pgVZ = pgVZ[distance>10.]*10**9
-mags = mags[distance>10.]*10**9
+pgwH00=pgwH00[distance>10.]
+pgwH10=pgwH10[distance>10.]
+pgwZ10=pgwZ10[distance>10.]
+pgwZ00=pgwZ00[distance>10.]
+pgVH = pgVH[distance>10.]
+pgVZ = pgVZ[distance>10.]
+mags = mags[distance>10.]
 distance = distance[distance>10.]
 
 
@@ -369,7 +445,7 @@ print(pgwH00)
 
 
 def fun(x, a,c):
-    return a*x+c
+    return x**-a+c
 
 from scipy.optimize import curve_fit
 
@@ -383,41 +459,145 @@ popt5, pcov5 = curve_fit(fun, distance, pgVZ)
 
 print(popt0[0])
 
+pgwH00 = getVars('PGwRsH00:')
+pgwZ00 = getVars('PGwRsZ00:')
+pgwH10 = getVars('PGwRsH10:')
+pgwZ10 = getVars('PGwRsZ10:')
+pgVH = getVars('PGVH:')
+pgVZ = getVars('PGVZ:')
+mags = getVars('Magnitude')
+distance = getVars('Distance')
 
-
-fig = plt.figure(1, figsize=(12,12))
+fig = plt.figure(1, figsize=(12,8))
 plt.subplots_adjust(hspace=0.001)
-plt.subplot(211)
-plt.semilogy(distance, pgwH00, 's',color=(0.,0.,0.), markersize=14.,label='00 PG$\dot{\omega}_H$ Slope=' + str(round(popt0[0],1)))
+plt.subplot(222)
+plt.semilogy(distance, pgwH00, 's',color=(0.,0.,0.), markersize=14.,label='00 PG$\dot{\omega}_H$ Exponenet=-' + str(round(popt0[0],1)))
 plt.semilogy(np.linspace(0,200,200), fun(np.linspace(0,200,200),*popt0),'--', color=(0.,0.,0.), linewidth=2.)
-plt.semilogy(distance, pgwZ00, 'v', markersize=14., label='00 PG$\dot{\omega}_Z$ Slope=' + str(round(popt1[0],1)), color=(230./255., 159./255., 0.))
+plt.semilogy(distance, pgwZ00, 'v', markersize=14., label='00 PG$\dot{\omega}_Z$ Exponent=-' + str(round(popt1[0],1)), color=(230./255., 159./255., 0.))
 plt.semilogy(np.linspace(0,200,200), fun(np.linspace(0,200,200),*popt1),'b--', linewidth=2., color=(230./255.,159./255., 0.))
-plt.semilogy(distance, pgwH10,'s', markersize=14.,label='10 PG$\dot{\omega}_H$ Slope=' + str(round(popt2[0],1)), color=(86./255.,180./255., 233./255.))
+plt.semilogy(distance, pgwH10,'s', markersize=14.,label='10 PG$\dot{\omega}_H$ Exponenet=-' + str(round(popt2[0],1)), color=(86./255.,180./255., 233./255.))
 plt.semilogy(np.linspace(0,200,200), fun(np.linspace(0,200,200),*popt2),'b--', linewidth=2., color=(86./255.,180./255., 233./255.))
-plt.semilogy(distance, pgwZ10, 'v', markersize=14., label='10 PG$\dot{\omega}_Z$ Slope=' + str(round(popt3[0],1)), color=(0./255.,158./255., 115./255.))
+plt.semilogy(distance, pgwZ10, 'v', markersize=14., label='10 PG$\dot{\omega}_Z$ Exponenet=-' + str(round(popt3[0],1)), color=(0./255.,158./255., 115./255.))
 plt.semilogy(np.linspace(0,200,200), fun(np.linspace(0,200,200),*popt3),'b--', linewidth=2., color=(0./255.,158./255., 115./255.))
 plt.legend(loc=2)
 plt.xlim([0.,200.])
-plt.ylabel('Peak Ground Rotation Rate (nRadians/s)')
+plt.ylabel('Peak Ground Rotation Rate ($radians/s$)')
 plt.xticks([])
-plt.subplot(212)
-plt.semilogy(distance, pgVH, '.', markersize=18., label='PGV$_H$ Slope=' + str(round(popt4[0],1)), color=(240./255.,240./255., 66./255.))
+plt.subplot(223)
+plt.semilogy(distance, pgVH, '.', markersize=18., label='PGV$_H$ Exponent=-' + str(round(popt4[0],1)), color=(240./255.,240./255., 66./255.))
 plt.semilogy(np.linspace(0,200,200), fun(np.linspace(0,200,200),*popt4),'--', color=(240./255.,240./255., 66./255.), linewidth=2.)
-plt.semilogy(distance, pgVZ, '.', markersize=18., label='PGV$_Z$ Slope=' + str(round(popt5[0],1)), color=(0./255.,114./255., 178./255.) )
+plt.semilogy(distance, pgVZ, '.', markersize=18., label='PGV$_Z$ Exponent=-' + str(round(popt5[0],1)), color=(0./255.,114./255., 178./255.) )
 plt.semilogy(np.linspace(0,200,200), fun(np.linspace(0,200,200),*popt5),'--', color=(0./255.,114./255., 178./255.), linewidth=2.)
 plt.legend(loc=2)
 plt.xlim([0.,200])
-plt.xlabel('Distance from Event (km)')
-plt.ylabel('Peak Ground Velocity (nm/s)')
+plt.xlabel('Distance from Event ($km$)')
+plt.ylabel('Peak Ground Velocity ($m/s$)')
+
+
+pgwH00 = getVars('Peak 00 PGWT:')
+pgwZ00 = getVars('Peak 00 PGWZ:')
+pgwH10 = getVars('Peak 10 PGWT:')
+pgwZ10 = getVars('Peak 10 PGWZ:')
+pgVH = getVars('PGAH:')
+pgVZ = getVars('PGAZ:')
+mags = getVars('Magnitude')
+distance = getVars('Distance')
+
+
+
+
+
+
+pgwH00=pgwH00[distance>10.]*10**0
+pgwH10=pgwH10[distance>10.]*10**0
+pgwZ10=pgwZ10[distance>10.]*10**0
+pgwZ00=pgwZ00[distance>10.]*10**0
+pgVH = pgVH[distance>10.]*10**0
+pgVZ = pgVZ[distance>10.]*10**0
+mags = mags[distance>10.]*10**0
+distance = distance[distance>10.]
+
+
+#pgwH00 = np.divide(pgwH00,10**(1.5*mags+6))*10**9
+#pgwH10 = np.divide(pgwH10,10**(1.5*mags+6))*10**9
+#pgwZ00 = np.divide(pgwZ00,10**(1.5*mags+6))*10**9
+#pgwZ10 = np.divide(pgwZ10,10**(1.5*mags+6))*10**9
+#pgVH = np.divide(pgVH,10**(1.5*mags+6))*10**9
+#pgVZ = np.divide(pgVZ,10**(1.5*mags+6))*10**9
+
+
+print(pgwH00)
+
+
+def fun(x, a,c):
+    return x**-a+c
+    
+def fun2(x, a,c):
+    return x**-a+c
+
+from scipy.optimize import curve_fit
+
+popt0, pcov0 = curve_fit(fun, distance, pgwH00)
+popt1, pcov1 = curve_fit(fun, distance, pgwH10)
+popt2, pcov2 = curve_fit(fun, distance, pgwZ00)
+popt3, pcov3 = curve_fit(fun, distance, pgwZ10)
+popt4, pcov4 = curve_fit(fun2, distance, pgVH)
+popt5, pcov5 = curve_fit(fun2, distance, pgVZ)
+
+
+print(popt0[0])
+
+
+pgwH00 = getVars('Peak 00 PGWT:')*10**0
+pgwZ00 = getVars('Peak 00 PGWZ:')*10**0
+pgwH10 = getVars('Peak 10 PGWT:')*10**0
+pgwZ10 = getVars('Peak 10 PGWZ:')*10**0
+pgVH = getVars('PGAH:')*10**0
+pgVZ = getVars('PGAZ:')*10**0
+mags = getVars('Magnitude')
+distance = getVars('Distance')
+
+
+
+
+
+
+
+
+
+
+plt.subplots_adjust(hspace=0.001)
+plt.subplot(221)
+plt.semilogy(distance, pgwH00, 's',color=(0.,0.,0.), markersize=14.,label='00 PG$\omega_H$ Exponenet=-' + str(round(popt0[0],1)))
+plt.semilogy(np.linspace(0,200,200), fun(np.linspace(0,200,200),*popt0),'--', color=(0.,0.,0.), linewidth=2.)
+plt.semilogy(distance, pgwZ00, 'v', markersize=14., label='00 PG$\omega_Z$ Exponenet=-' + str(round(popt1[0],1)), color=(230./255., 159./255., 0.))
+plt.semilogy(np.linspace(0,200,200), fun(np.linspace(0,200,200),*popt1),'b--', linewidth=2., color=(230./255.,159./255., 0.))
+plt.semilogy(distance, pgwH10,'s', markersize=14.,label='10 PG$\omega_H$ Exponent=-' + str(round(popt2[0],1)), color=(86./255.,180./255., 233./255.))
+plt.semilogy(np.linspace(0,200,200), fun(np.linspace(0,200,200),*popt2),'b--', linewidth=2., color=(86./255.,180./255., 233./255.))
+plt.semilogy(distance, pgwZ10, 'v', markersize=14., label='10 PG$\omega_Z$ Exponenet=-' + str(round(popt3[0],1)), color=(0./255.,158./255., 115./255.))
+plt.semilogy(np.linspace(0,200,200), fun(np.linspace(0,200,200),*popt3),'b--', linewidth=2., color=(0./255.,158./255., 115./255.))
+plt.legend(loc=2)
+plt.xlim([0.,200.])
+plt.ylabel('Peak Ground Rotation ($radians$)')
+plt.xticks([])
+plt.subplot(224)
+plt.semilogy(distance, pgVH, '.', markersize=18., label='PGA$_H$ Exponent=-' + str(round(popt4[0],1)), color=(240./255.,240./255., 66./255.))
+plt.semilogy(np.linspace(0,200,200), fun2(np.linspace(0,200,200),*popt4),'--', color=(240./255.,240./255., 66./255.), linewidth=2.)
+plt.semilogy(distance, pgVZ, '.', markersize=18., label='PGA$_Z$ Exponent=-' + str(round(popt5[0],1)), color=(0./255.,114./255., 178./255.) )
+plt.semilogy(np.linspace(0,200,200), fun2(np.linspace(0,200,200),*popt5),'--', color=(0./255.,114./255., 178./255.), linewidth=2.)
+plt.legend(loc=2)
+plt.xlim([0.,200])
+plt.xlabel('Distance from Event ($km$)')
+plt.ylabel('Peak Ground Acceleration ($m/s^2$)')
+
+
+
+
 #plt.show()
 plt.savefig('DistancePGVals.jpg',format='JPEG',dpi=400)
 plt.savefig('DistancePGVals.pdf', format='PDF', dpi=400)
 plt.clf()
 plt.close()
-
-
-
-
 
 '''
 
@@ -594,14 +774,15 @@ distance = getVars('Distance')
 
 pT00 = getVars('Peak Transverse 00 Rotation:')
 pT10 = getVars('Peak Transverse 10 Rotation:')
-
+pT00R = getVars('Peak Transverse 00 Rotation Rate:')
+pT10R = getVars('Peak Transverse 10 Rotation Rate:')
 
 mags = getVars('Magnitude')
 
 
 PGV = getVars('Peak Vertical 00 Translation Rate:')
 
-
+PGVA = getVars('Peak Vertical 00 Translation RateRate:')
 
 
 mos = []
@@ -622,23 +803,57 @@ for pair in zip(PGV, pT10):
     
 c=np.mean(cs)
 
+cs2 =[]
+for pair in zip(PGVA, pT00R):
+    cs2.append(pair[0]/(2*pair[1]))
+
+for pair in zip(PGVA, pT10R):
+    cs2.append(pair[0]/(2*pair[1]))
+    
+c2=np.mean(cs2)
 
 
-fig =plt.figure(2, figsize=(8,8))
-ax =plt.subplot(111)
+
+
+
+
+fig =plt.figure(2, figsize=(12,12))
+ax =plt.subplot(121)
 ax.scatter(np.log10(mos[distance >50.]),PGV[distance >50.]/(2*c),marker='v', label='Scaled PGV $>$ 50 km', s=35, color=(0.,0.,0.0))
 ax.scatter(np.log10(mos[distance >50.]),pT00[distance >50.], marker='v', label='PG$\omega$ 00 $>$ 50 km', s=35, color=(230./255., 159./255., 0.))
 ax.scatter(np.log10(mos[distance >50.]),pT10[distance >50.], marker='v', label='PG$\omega$ 10 $>$ 50 km', s=35, color=(86./255., 180./255., 33./255.))
 ax.scatter(np.log10(mos[distance <=50.]),PGV[distance <=50.]/(2*c),  label='Scaled PGV $\leq$ 50 km', s=35, color=(0., 158./255., 115./255.))
-ax.scatter(np.log10(mos[distance <=50.]),pT00[distance <=50.],  label='PG$\omega$ 00 $\leq$ 50 km', s=35, color=(240./255., 228./255., 66./255.))
+ax.scatter(np.log10(mos[distance <=50.]),pT00[distance <=50.],  label='PG$\omega$ 00 $\leq$ 50 km', s=35, color=(213./255., 94./255., 0./255.))
 ax.scatter(np.log10(mos[distance <=50.]),pT10[distance <=50.],  label='PG$\omega$ 10 $\leq$ 50 km', s=35, color=(0., 114./255., 178./255.))
 ax.set_yscale("log")
 plt.ylim((10**-9,10**-3))
 #plt.semilogy(distance,np.abs(newval),'.',label='Theoretical')
-plt.xlabel('Seismic Momoment (log(dyne$\cdot$cm))')
-plt.ylabel('Peak Ground Rotation (Radians)')
+plt.xlabel('Seismic Moment (log($10^{-7} N \cdot$ m))')
+plt.ylabel('Peak Ground Rotation (radians)')
 plt.legend(loc='upper left')
 plt.title('Apparent c= ' + str(int(c)) + '$\pm$' + str(int(np.std(cs))) + ' (m/s)')
+
+ax =plt.subplot(122)
+ax.scatter(np.log10(mos[distance >50.]),PGVA[distance >50.]/(2*c2),marker='v', label='Scaled PGA $>$ 50 km', s=35, color=(0.,0.,0.0))
+ax.scatter(np.log10(mos[distance >50.]),pT00R[distance >50.], marker='v', label='PG$\dot{\omega}$ 00 $>$ 50 km', s=35, color=(230./255., 159./255., 0.))
+ax.scatter(np.log10(mos[distance >50.]),pT10R[distance >50.], marker='v', label='PG$\dot{\omega}$ 10 $>$ 50 km', s=35, color=(86./255., 180./255., 33./255.))
+ax.scatter(np.log10(mos[distance <=50.]),PGVA[distance <=50.]/(2*c2),  label='Scaled PGA $\leq$ 50 km', s=35, color=(0., 158./255., 115./255.))
+ax.scatter(np.log10(mos[distance <=50.]),pT00R[distance <=50.],  label='PG$\dot{\omega}$ 00 $\leq$ 50 km', s=35, color=(213./255., 94./255., 0./255.))
+ax.scatter(np.log10(mos[distance <=50.]),pT10R[distance <=50.],  label='PG$\dot{\omega}$ 10 $\leq$ 50 km', s=35, color=(0., 114./255., 178./255.))
+ax.set_yscale("log")
+plt.ylim((10**-8,10**-2))
+#plt.semilogy(distance,np.abs(newval),'.',label='Theoretical')
+plt.xlabel('Seismic Moment (log($10^{-7} N \cdot$ m))')
+plt.ylabel('Peak Ground Rotation Rate (radians/s)')
+plt.legend(loc='upper left')
+
+plt.title('Apparent c= ' + str(int(c2)) + '$\pm$' + str(int(np.std(cs2))) + ' (m/s)')
+
+plt.tight_layout()
+
+
+
+
 plt.savefig('Rayleigh_PGW_PGV.jpg', format='jpeg', dpi=400)
 plt.savefig('Rayleigh_PGW_PGV.pdf',format='pdf', dpi=400)
 plt.clf()

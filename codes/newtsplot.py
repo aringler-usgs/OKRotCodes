@@ -286,44 +286,7 @@ def grabdata(eventtime, loc, sta, bazi, fevent):
     # noiseRaw is the noise without filtering
     return st, noiseRaw
 
-def makePSD(st,noise, event, eveidx, debug=True):
-    eventtime = event.origins[0].time
-    eventtimeStr = str(eventtime.year) + ' ' + str(eventtime.julday).zfill(3) + ' ' + \
-                    str(eventtime.hour).zfill(2) + ':' + str(eventtime.minute).zfill(2) + ':' + \
-                    str(eventtime.second).zfill(2)
-    mag = event.magnitudes[0].mag
-    magstr = event.magnitudes[0].magnitude_type
-    if 'Lg' in magstr:
-        magstr = 'mb_{Lg}'
-    (dis,azi, bazi) = gps2dist_azimuth(stalat, stalon, event.origins[0].latitude,event.origins[0].longitude)
-    dis *= 1./1000.
-    ps=[]
-    ns=[]
-    fig =plt.figure(1)
-    for tr in st:
-        (p,f)=cp(tr,tr,length,0,tr.stats.delta)
-        p = konno_ohmachi_smoothing(p,f, bandwidth=15.)
-        plt.semilogx(f,10.*np.log10(p),label='Signal: ' + tr.id)
-        ps.append(10*np.log10(p))
-    for tr in noise:
-        (n,f)=cp(tr,tr,length,0,tr.stats.delta)
-        n = konno_ohmachi_smoothing(n,f, bandwidth=15.)
-        plt.semilogx(f,10.*np.log10(n),label='Noise: ' + tr.id)
-        ns.append(10.*np.log10(n))
-    plt.xlim((.5,50))
-    plt.xlabel('Frequency (Hz)')
-    if st[0].stats.station == 'OKR1':
-        plt.ylabel('dB (rel. 1 $(radian/s^2)^2/Hz$)')
-        word='R'
-    else:
-        plt.ylabel('dB (rel. 1 $(m/s^2)^2/Hz$)')
-        word ='T'
-    plt.legend()
-    plt.title(eventtimeStr + ' Distance:' + str(int(dis)) + ' km $' +  magstr + '$=' + str(mag))
-    plt.savefig('SmoothPSD' + word + st[0].stats.location +'_Event' + str(eveidx + 1) + '.jpg', format='jpeg', dpi=400)
-    plt.clf()
-    plt.close()
-    return ps, ns, f
+
 
 
 def plotTS(event, eveidx, st00R, st10R, st00):
@@ -381,14 +344,14 @@ def plotTS(event, eveidx, st00R, st10R, st00):
         box = ax.get_position()
         ax.set_position([box.x0, box.y0 + box.height * 0.3,
             box.width, box.height * 0.8])
-        plt.savefig(comp + 'TimeSeries_Event' + str(eveidx+1) + '.jpg', format='jpeg', dpi=400)
+        plt.savefig(comp + 'TimeSeries_Event' + str(eveidx+1) + 'CHECK.jpg', format='jpeg', dpi=400)
         plt.clf()
         plt.close()
     return
 
 
 
-def MakePeakPlot(event,eveidx):
+def plotNEW(event, eveidx, st00R, st10R, st00):
     eventtime = event.origins[0].time
     eventtimeStr = str(eventtime.year) + ' ' + str(eventtime.julday).zfill(3) + ' ' + \
         str(eventtime.hour).zfill(2) + ':' + str(eventtime.minute).zfill(2) + ':' + \
@@ -399,102 +362,110 @@ def MakePeakPlot(event,eveidx):
         magstr = 'mb_{Lg}'
     (dis,azi, bazi) = gps2dist_azimuth(stalat, stalon, event.origins[0].latitude,event.origins[0].longitude)
     dis *= 1./1000.
-    path1 = '/tr1/telemetry_days/GS_OKR1/' + str(eventtime.year) + '/' + \
-        str(eventtime.year) + '_' + str(eventtime.julday).zfill(3) + '/' + \
-        '*_EJZ.512.seed'
-        
-    st1 = read(path1, starttime=eventtime-140., endtime=eventtime+120.)
     
-    path2='/tr1/telemetry_days/GS_OK038/' + str(eventtime.year) + '/' + \
-        str(eventtime.year) + '_' + str(eventtime.julday).zfill(3) + '/' + \
-        '00_HH*.512.seed'
-    st2 = read(path2, starttime=eventtime-140., endtime=eventtime+120.)
-    st2[0].stats.channel = 'HHN'
-    st2[1].stats.channel = 'HHE'
-    # Time correction
-    if eventtime.julday <= 143.:
-        for tr in st2:
-            tr.stats.starttime += 1. 
-    
-    for tr in st2:
-        tr.simulate(paz_remove=pazTC)
-    st1[0].simulate(paz00D[2])
-    st1[1].simulate(paz10D[2])
+    fig = plt.figure(1,figsize=(16,6))
+    plt.suptitle('Time Series ' + eventtimeStr + ' Distance:' + str(int(dis)) + ' km $' + magstr + '$' + str(mag))
+    plt.subplots_adjust(hspace=0.001)
+    #plt.subplots_adjust(wspace=0.002)
+    ax = plt.subplot(321)
+    plt.suptitle('Time Series ' + eventtimeStr + ' Distance:' + str(int(dis)) + ' km $' + magstr + '$' + str(mag))
 
-    
-    st2.rotate('NE->RT', bazi)
-
-    
-    st2.taper(.5)
-    st1.taper(.5)
-    st2.filter('bandpass',freqmin = 1., freqmax=20.)
-    st1.filter('bandpass',freqmin=1., freqmax=20.)
-    st2.trim(starttime=eventtime-20.)
-    st1.trim(starttime=eventtime-20.)
-    lim = 3.*np.abs(st1[0].max())*10**6
-    fig = plt.figure(1)
-    ax = plt.subplot(311)
-    plt.title('Time Series ' + eventtimeStr + ' Distance:' + str(int(dis)) + ' km $' + magstr + '$' + str(mag))
-    t = np.arange(st1[0].stats.npts)/st1[0].stats.sampling_rate
-    t+= -20.
-    plt.plot(t,st1[0].data*10**6,label='00 Rotational Vertical',color='k')
-    plt.ylim((-lim,lim))
-    plt.legend(loc='upper left', fontsize=8)
-    plt.ylabel('$\mu$Radians')
-    plt.xlim((-20,120))
-    box = ax.get_position()
-    ax.set_position([box.x0, box.y0 + box.height * 0.3,
-        box.width, box.height * 0.8])
-    ax= plt.subplot(312)
-    t = np.arange(st1[1].stats.npts)/st1[1].stats.sampling_rate
-    t+= -20.
-    plt.plot(t,st1[1].data*10**6, label='10 Rotational Vertical',color='k')
-    plt.xlim((-20,120))
-    plt.ylim((-lim,lim))
-    plt.ylabel('$\mu$Radians')
-    plt.legend(loc='upper left', fontsize=8)
-    box = ax.get_position()
-    ax.set_position([box.x0, box.y0 + box.height * 0.3,
-        box.width, box.height * 0.8])
-    ax= plt.subplot(313)
-    t = np.arange(st2[0].stats.npts)/st2[0].stats.sampling_rate
-    t+= -20.
-    plt.plot(t,(np.sqrt((st2[0].data**2 +  st2[1].data**2))/2.)*10**6, label='00 Horizontal' ,color='k')
-    plt.legend(loc='upper left')
+    lim = 2.*np.abs((st00R[0].max()))*10**6
+    print(lim)
+    t = np.arange(st00R[0].stats.npts)/st00R[0].stats.sampling_rate
+    plt.plot(t,st00R[0].data*10**6,label='00 Rotational ', linewidth=1.)
+    plt.plot(t,st10R[0].data*10**6,label='10 Rotational ', linewidth=1.)
+    plt.text(2.5, .3, 'Radial')
+    ax.axvspan(35., 45., alpha=0.5, color='.5')
+    plt.xticks([])
+    plt.xlim((0,120))
+    ax = plt.subplot(323)
+    plt.text(2.5, .3, 'Transverse')
+    t = np.arange(st00R[1].stats.npts)/st00R[1].stats.sampling_rate
+    plt.plot(t,st00R[1].data*10**6,label='00 Rotational ', linewidth=1.)
+    plt.plot(t,st10R[1].data*10**6,label='10 Rotational ', linewidth=1.)
+    plt.ylabel('$\mu$Radians/s')
+    plt.xlim((0,120))
+    ax.axvspan(35., 45., alpha=0.5, color='.5')
+    plt.xticks([])
+    ax = plt.subplot(325)
+    t = np.arange(st00R[2].stats.npts)/st00R[1].stats.sampling_rate
+    plt.plot(t,st00R[2].data*10**6,label='00 Rotational ', linewidth=1.)
+    plt.plot(t,st10R[2].data*10**6,label='10 Rotational ', linewidth=1.)
+    ax.axvspan(35., 45., alpha=0.5, color='.5')
+    plt.text(2.5, .5, 'Vertical')
+    plt.xlim((0,120))
     plt.xlabel('Time (s)')
-    plt.xlim((-20,120))
-    plt.ylabel('$\mu$m/s')
-    box = ax.get_position()
-    ax.set_position([box.x0, box.y0 + box.height * 0.3,
-        box.width, box.height * 0.8])
-    plt.savefig('PGVROTTimeSeries_Event' + str(eveidx+1) + '.jpg', format='jpeg', dpi=400)
+    #plt.xticks([])
+    ax = plt.subplot(322)
+    #plt.title('Time Series ' + eventtimeStr + ' Distance:' + str(int(dis)) + ' km $' + magstr + '$' + str(mag))
+    plt.xlabel('Time (s)')
+    lim = 2.*np.abs((st00R[0].max()))*10**6
+    print(lim)
+    t = np.arange(st00R[0].stats.npts)/st00R[0].stats.sampling_rate
+    plt.plot(t,st00R[0].data*10**6,label='00 Rotational ', linewidth=1.)
+    plt.plot(t,st10R[0].data*10**6,label='10 Rotational ', linewidth=1.)
+    ax.axvspan(35., 45., alpha=0.5, color='.5')
+    plt.xticks([])
+    plt.yticks([])
+    plt.xlim((35.,45.))
+    ax = plt.subplot(324)
+    t = np.arange(st00R[1].stats.npts)/st00R[1].stats.sampling_rate
+    plt.plot(t,st00R[1].data*10**6,label='00 Rotational ', linewidth=1.)
+    plt.plot(t,st10R[1].data*10**6,label='10 Rotational ', linewidth=1.)
+    #plt.ylabel('$\mu$Radians/s')
+    plt.xlim((35.,45.))
+    ax.axvspan(35., 45., alpha=0.5, color='.5')
+    plt.xticks([])
+    plt.yticks([])
+    ax = plt.subplot(326)
+    t = np.arange(st00R[2].stats.npts)/st00R[1].stats.sampling_rate
+    plt.plot(t,st00R[2].data*10**6,label='00 Rotational ', linewidth=1.)
+    plt.plot(t,st10R[2].data*10**6,label='10 Rotational ', linewidth=1.)
+    ax.axvspan(35., 45., alpha=0.5, color='.5')
+    plt.xlim((35.,45.))
+    plt.xlabel('Time (s)')
+    plt.yticks([])
+    #plt.tight_layout()
+    #fig.tight_layout(rect=[0,0,.8,1]) 
+    plt.savefig('NEWTimeSeries_Event' + str(eveidx+1) + 'CHECK.jpg', format='jpeg', dpi=400)
     plt.clf()
     plt.close()
     
-
-    return 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    #plt.show()
+    #plt.legend(loc='upper right')
+    #
+    #plt.xlim((0,120))
+    #plt.ylim((-lim,lim))
+    #box = ax.get_position()
+    #ax.set_position([box.x0, box.y0 + box.height * 0.3,
+             #box.width, box.height * 0.8])
+    #ax= plt.subplot(312)
+    #t = np.arange(st10R[idx].stats.npts)/st10R[idx].stats.sampling_rate
+    #plt.plot(t,st10R[idx].data*10**6, label='10 Rotational '+ comp,color='k')
+    #plt.xlim((0,120))
+    
+    #plt.ylim((-lim,lim))
+    #plt.ylabel('$\mu$Radians/s')
+    #plt.legend(loc='upper right')
+    #box = ax.get_position()
+    #ax.set_position([box.x0, box.y0 + box.height * 0.3,
+             #box.width, box.height * 0.8])
+    #ax= plt.subplot(313)
+    #t = np.arange(st00[idx].stats.npts)/st00[idx].stats.sampling_rate
+    #plt.plot(t,st00[idx].data*10**6, label='00 Translational ' + comp ,color='k')
+    #plt.legend(loc='upper right')
+    #plt.xlabel('Time (s)')
+    #plt.xlim((0,120))
+    #plt.ylabel('$\mu$m/s')
+    #box = ax.get_position()
+    #ax.set_position([box.x0, box.y0 + box.height * 0.3,
+        #box.width, box.height * 0.8])
+    #plt.savefig(comp + 'TimeSeries_Event' + str(eveidx+1) + 'CHECK.jpg', format='jpeg', dpi=400)
+    #plt.clf()
+    #plt.close()
+    return
 
 
 
@@ -518,10 +489,10 @@ print(len(cat))
 
 
 for eveidx, event in enumerate(cat):
-    if eveidx != 114:
-        continue
+    #if eveidx != 114:
+    #    continue
     print('On event: ' + str(eveidx+1))
-    fevent = open('Results_Event_' + str(eveidx+1),'w')
+    fevent = open('OTHERResults_Event_' + str(eveidx+1),'w')
     bazi = writeEventInfo(event,fevent)
     
     try:
@@ -542,120 +513,8 @@ for eveidx, event in enumerate(cat):
     
     # Now we have all the data for the events
     
-    try:
-
-        ps00R,ns00R, f = makePSD(st00R, n00R, event, eveidx)
-    except:
-        print('Unable to make 00 R psd')
-
-    try:
-        ps10R,ns10R, f = makePSD(st10R, n10R, event, eveidx)
-    except:
-        print('Unable to make 10 R psd')
-    
-    try:
-        ps00T, ns10T, f = makePSD(st00, n00, event, eveidx)
-    except:
-        print('Unable to make 00 T psd')
 
 
-    try:
-
-        eventtime = event.origins[0].time
-        eventtimeStr = str(eventtime.year) + ' ' + str(eventtime.julday).zfill(3) + ' ' + \
-            str(eventtime.hour).zfill(2) + ':' + str(eventtime.minute).zfill(2) + ':' + \
-            str(eventtime.second).zfill(2)
-        mag = event.magnitudes[0].mag
-        magstr = event.magnitudes[0].magnitude_type
-        if 'Lg' in magstr:
-            magstr = 'mb_{Lg}'
-        (dis,azi, bazi) = gps2dist_azimuth(stalat, stalon, event.origins[0].latitude,event.origins[0].longitude)
-        dis *= 1./1000.
-        # Now take spectral ratios and plot
-        fig = plt.figure(1)
-        for idx, comp in enumerate(['Radial', 'Transverse', 'Vertical']):
-            plt.semilogx(f, ps00T[idx] - ps00R[idx], label='00 ' + comp)
-            plt.semilogx(f, ps00T[idx] - ps10R[idx], label='10 ' + comp)
-        plt.xlim((.5,50))
-        plt.xlabel('Frequency (Hz)')
-        plt.ylabel('Ratio (dB)')
-        plt.legend()
-        plt.title('Spectral Ratio ' + eventtimeStr + ' Distance:' + str(int(dis)) + ' km $' +  magstr + '$=' + str(mag))
-        plt.savefig('PSDRatio_Event' + str(eveidx + 1) + '.jpg', format='jpeg', dpi=400)
-        plt.clf()
-        plt.close()
-    except:
-        plt.clf()
-        plt.close()
-        print('Unable to compute splectral ratios')
-
-    try:
-        minfre =1.
-        maxfre = 10.
-        for idx, comp in enumerate(['Radial','Transverse', 'Vertical']):
-            p00DIFF = ps00T[idx] -ps00R[idx]
-            p10DIFF = ps00T[idx] -ps10R[idx]
-            p00TTemp = ps00T[idx][(minfre <= f) & (maxfre >= f)]
-            p00RTemp = ps00R[idx][(minfre <= f) & (maxfre >= f)]
-            p10RTemp = ps10R[idx][(minfre <= f) & (maxfre >= f)]
-            p00DIFF = p00DIFF[(minfre <= f) & (maxfre >= f)]
-            p10DIFF = p10DIFF[(minfre <= f) & (maxfre >= f)]
-            fT = f[(minfre <= f) & (maxfre >= f)]
-            fevent.write('Mean Spectral Ratio 00 ' + comp + ': ' + str(np.mean(p00DIFF)) + '\n')
-            fevent.write('Peak Frequency Ratio 00 ' + comp + ': ' + str(fT[np.argmax(p00DIFF)]) + '\n')
-            fevent.write('Mean Spectral Ratio 00 : '+ str(np.mean(p00TTemp)) + '\n')
-            fevent.write('Mean Spectral Ratio 10 ' + comp + ': ' + str(np.mean(p10DIFF)) + '\n')
-            fevent.write('Peak Frequency Ratio 10 ' + comp + ': ' + str(fT[np.argmax(p10DIFF)]) + '\n')
-            fevent.write('Mean Spectral 00 ' + comp + ': '+ str(np.mean(p00TTemp)) + '\n')
-            fevent.write('Mean Spectral 00 ' + comp +  ' Translational: ' + str(np.mean(p00TTemp)) + '\n')
-            fevent.write('Mean Spectral 00 ' + comp +  ' Rotational: ' + str(np.mean(p00RTemp)) + '\n')
-            fevent.write('Mean Spectral 10 ' + comp +  ' Rotational: ' + str(np.mean(p10RTemp)) + '\n')
-            fevent.write('Frequency Peak 00 ' + comp + ': '+ str(fT[np.argmax(p00TTemp)]) + '\n')
-            fevent.write('Frequency Peak 00 ' + comp + ' Rotational: '  + str(fT[np.argmax(p00RTemp)]) + '\n')
-            fevent.write('Frequency Peak 10 ' + comp + ' Rotational: '  + str(fT[np.argmax(p10RTemp)]) + '\n')
-            fevent.write('Peak Spectral Value 00 Rotational ' + comp + ': ' + str(np.max(p00RTemp)) + '\n')
-            fevent.write('Peak Spectral Value 10 Rotational ' + comp + ': ' + str(np.max(p10RTemp)) + '\n')
-            fevent.write('Peak Spectral Value 00 Translational ' + comp + ': ' + str(np.max(p00TTemp)) + '\n')
-            fevent.write('Peak Spectral Frequency Value 00 Rotational ' + comp + ': ' + str(fT[np.argmax(p00RTemp)]) + '\n')
-            fevent.write('Peak Spectral Frequency Value 10 Rotational ' + comp + ': ' + str(fT[np.argmax(p10RTemp)]) + '\n')
-            fevent.write('Peak Spectral Frequency Value 00 Translational ' + comp + ': ' + str(fT[np.argmax(p00TTemp)]) + '\n')
-    except:
-        print('problem with spectral calc')
-    
-    
-    
-    
-    try:
-        MakePeakPlot(event,eveidx)
-    except:
-        print('Problem with PG plot')
-    
-    try:
-        ###################################### Make a spectral ratio plot for each event
-        fig = plt.figure(1, figsize=(8,8))
-        plt.semilogx(f, ps00T[2], label='Vertical Velocity')
-        plt.semilogx(f, (ps00T[1] + ps00T[0])/2., label='Mean Horizontal Velocity')
-        plt.semilogx(f, ps00R[2], label='00 Vertical Rotation Rate')
-        plt.semilogx(f, (ps00R[1] + ps00R[0])/2., label='00 Mean Horizontal Rotation Rate')
-        plt.semilogx(f, ps10R[2], label='10 Vertical Rotation Rate')
-        plt.semilogx(f, (ps10R[1] + ps10R[0])/2., label='10 Mean Horizontal Rotation Rate')
-        plt.axvspan(1.,10., alpha=.5, color='0.75')
-        plt.title('PSD ' + eventtimeStr + ' Distance:' + str(int(dis)) + ' km $' +  magstr + '$=' + str(mag))
-        plt.xlim((0.5,50))
-        plt.xlabel('Frequency (Hz)')
-        plt.ylabel('Power (dB)')
-        plt.legend(loc='upper right')
-
-        plt.savefig('PSDMean_Event' + str(eveidx + 1) + '.jpg', format='jpeg', dpi=400)
-        plt.clf()
-        plt.close()
-    except:
-        print('Problem with spectral plot')
-        
-    
-    
-    
-    # Last thing to do is filter and plot
 
     try:
     #if True:
@@ -667,7 +526,7 @@ for eveidx, event in enumerate(cat):
         st10R.taper(.5)
         #try:
         if True:
-            plotTS(event, eveidx, st00R, st10R, st00)
+            plotNEW(event, eveidx, st00R, st10R, st00)
     except:
         print('Unable to plot T series')
     fevent.close()
@@ -683,82 +542,4 @@ for eveidx, event in enumerate(cat):
     
     
     
-    
-    
-    ######################################################################
-    ## compute phase velocity
-    
-    #try:
-    ##if True:
-        #minfre=.1
-        #maxfre=20.
-        #ph = .5*(10**(pTC[0]/20.)*(2*np.pi*f))/(10**(p00[2]/20))
-        #ph2 =.5*(10**(pTC[0]/20.)*(2*np.pi*f))/(10**(p10[2]/20))
-        #f2 = f[(minfre <= f) & (maxfre >= f)]
-        #ph = ph[(minfre <= f) & (maxfre >= f)]
-        #ph2 = ph2[(minfre <= f) & (maxfre >= f)]
-        #fig = plt.figure(9)
-        #plt.semilogx(f2,ph/1000., label='00 Phase Velocity')
-        
-        #plt.semilogx(f2,ph2/1000., label='10 Phase Velocity')
-        #plt.xlim((.5,20))
-        #plt.xlabel('Frequency (Hz)')
-        #plt.ylabel('Phase Velocity (km/s)')
-        #plt.legend()
-        #plt.title(eventtimeStr + ' Distance:' + str(int(dis)) + ' km ' +  event.magnitudes[0].magnitude_type + '=' + str(mag))
-        #plt.savefig('PhaseVel_' + str(eveidx+1) + '.jpg', format='jpeg')
-        #plt.clf()
-        
-        
-        
-        
-        #phs1.append(ph)
-        #phs2.append(ph2)
-        #fgood = f2
-        
-        
-        
-        
-        
-        #nminfre = 1.
-        #nmaxfre = 3.
-        #ph = ph[(nminfre <=f2) &(nmaxfre >= f2)]
-        #ph2 = ph2[(nminfre <=f2) &(nmaxfre >= f2)]
-        #fevent.write('Mean Phase Velocity 00: ' + str(np.mean(ph)) + '\n')
-        #fevent.write('Mean Phase Velocity 10: ' + str(np.mean(ph2)) + '\n')
-        #fevent.write('Max Phase Velocity 00: ' + str(np.max(ph)) + '\n')
-        #fevent.write('Max Phase Velocity 10: ' + str(np.max(ph2)) + '\n')
-        #fevent.write('Peak Phase Frequency 00: ' + str(f2[np.argmax(ph)]) + '\n')
-        #fevent.write('Peak Phase Frequency 10: ' + str(f2[np.argmax(ph2)]) + '\n')
-        
-        
-        
-        
-        
-        
-    #except:
-        #print('Problem with phase velocity')
-    
-    
-    
-    
 
-   
-    
-#fig = plt.figure(10)
-#for idx, ele in enumerate(zip(phs1,phs2)):
-    #if idx==0:
-        #m1 = ele[0]
-        #m2 = ele[1]
-    #else:
-        #m1 += ele[0]
-        #m2 += ele[1]
-    #plt.semilogx(fgood,ele[0]/1000., alpha=.3, color='.5')
-    #plt.semilogx(fgood,ele[1]/1000., alpha=.3,color='.5')
-
-#plt.semilogx(fgood, (m1/float(len(phs1)))/1000.,color='k')
-#plt.semilogx(fgood, (m2/float(len(phs2)))/1000.,color='k')
-#plt.xlim((.5,20))
-#plt.xlabel('Frequency (Hz)')
-#plt.ylabel('Phase Velocity (km/s)')
-#plt.savefig('PHASEALL.jpg',format='jpeg')

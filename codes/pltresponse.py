@@ -72,9 +72,8 @@ paz1275Z = {'gain': 1., 'zeros': [0., 0., -98.6279],
 
 
 
-fig = plt.figure(1,figsize=(12,12))
-
-
+fig = plt.figure(1,figsize=(8,10))
+plt.subplots_adjust(hspace=0.001)
 # Do PDF calculation
 if True:
     #sens =[]
@@ -117,13 +116,13 @@ if True:
             #plt.semilogx(freq, 10.*np.log10(inst1resp))
             #plt.show()
             
-            h,f = paz_to_freq_resp(sen[comp]['poles'], sen[comp]['zeros'], sen[comp]['sensitivity'], 1./200., 1800, freq=True)
+            h,f = paz_to_freq_resp(sen[comp]['poles'], sen[comp]['zeros'], sen[comp]['sensitivity'], 1./200., 180000, freq=True)
             
             
             sen[comp]['sensitivity'] *= 1./np.abs(h[np.abs(f-10.).argmin()])
-            sen[comp]['sensitivity'] *= 2000.*(2**26/40.)
+            sen[comp]['sensitivity'] *= 2000.
 
-            h,f = paz_to_freq_resp(sen[comp]['poles'], sen[comp]['zeros'], sen[comp]['sensitivity'], 1./200., 1800, freq=True)
+            h,f = paz_to_freq_resp(sen[comp]['poles'], sen[comp]['zeros'], sen[comp]['sensitivity'], 1./200., 180000, freq=True)
             
             nlab = tr.id
             nlab = nlab.replace('H','J')
@@ -134,56 +133,31 @@ if True:
             nlab = nlab.replace('EJ1','EJN')
             nlab = nlab.replace('EJ2','EJE')
             
-            
-            
-            ppsd = PPSD(tr.stats,sen[comp], db_bins=(-180.,180,1), ppsd_length=1800.0)
-            ppsd.add(tr)
-            #ppsd.plot(show=True, show_noise_models=False, show_mean=True)
-            per, mean = ppsd.get_mean()
-            
-            mean = 10.**(mean/20.)
-            mean *= (2*np.pi*1./per)**-1
-            mean *= np.sqrt(2.**(1./4.) - 2.**(-1./4.))
-            mean = 20.*np.log10(mean)
-            newmean.append(mean)
-            #fig = plt.figure(1,figsize=(12,12))
-            #plt.subplot(1,2,1)
-            
-            #if nlab[-1] == '0':
-            #    nlab[-1] = 'Z'
-            #elif nlab[-1] == '1':
-            #    nlab[-1] = 'N'
-            #else:
-            #    nlab[-1] = 'E'
-            plt.semilogx(1./per, mean, label=nlab, linewidth=2)
-        #print(st)
-        #st.decimate(2)
-        #st.detrend()
-        #for idx, tr in enumerate(st):
-            #t = np.arange(0, tr.stats.npts / tr.stats.sampling_rate, tr.stats.delta)/(60.*60.)
-            #fig =plt.figure(2,figsize=(12,12))
-            #plt.subplot(3,1, idx+1)
-            #plt.plot(t, tr.data/(2000.*(2**26/40)), label=tr.id, color='k')
-            #plt.xlim((min(t),max(t)))
-            #if idx ==1:
-                #plt.ylabel('Vel. (Rad/s)')
-            #if idx == 2:
-                #plt.xlabel('Time (Hours)')
+            plt.subplot(211)
+            plt.title('Frequency Response of ATA Proto-SMHD Sensors')
+            plt.semilogx(f,20.*np.log10(np.abs(h)), label=nlab)
+            plt.xlim((.01, 100))
+            plt.xticks([])
+            plt.ylabel('Amplitude Response (V/radians/s)')
+            plt.subplot(212)
+            plt.semilogx(f,np.unwrap(np.angle(h))*180./math.pi, label=nlab)
+            plt.xlabel('Frequency (Hz)')
+            plt.ylabel('Phase Response (degrees)')
+            plt.xlim((.01, 100))
+            plt.ylim((0.,180.))
             #plt.legend()
-        #plt.tight_layout()
-        #plt.show()
-        #plt.savefig('Tseries' + st[0].stats.station + '.png',format='png')
-        #plt.clf()
-    stimestr = str(stime.year) + '-' + str(stime.month).zfill(2) + '-' + str(stime.day).zfill(2)
-    plt.title('Mean ATA Noise Estimates ' + stimestr + ' duration: ' + str(int(tr.stats.endtime - stime)) + ' s')
+    #stimestr = str(stime.year) + '-' + str(stime.month).zfill(2) + '-' + str(stime.day).zfill(2)
+    
     plt.xlabel('Frequency (Hz)')
-    plt.ylabel('ORD (dB rel. 1 $(radian/s)^2$)')
+    #plt.ylabel('ORD (dB rel. 1 $(radian/s)^2$)')
     plt.xlim((.01, 100))
-    plt.legend()
-    plt.savefig('ATANoise.png',format='png', dpi=400)
-    plt.savefig('ATANoise.pdf',format='pdf',dpi=400)
+#plt.tight_layout()
+plt.subplot(211)
+plt.legend(loc=9, ncol=2, bbox_to_anchor=(0.5,0.3), fontsize=14)
+plt.savefig('ATARESP.png',format='png', dpi=400)
+plt.savefig('ATARESP.pdf',format='pdf',dpi=400)
 
-
+#plt.show()
 
 
     #fig = plt.figure(2,figsize=(12,12))

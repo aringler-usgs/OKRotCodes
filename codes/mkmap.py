@@ -31,7 +31,7 @@ cat = client.get_events(starttime=stime, minmagnitude=2., latitude=stalat,
 
 
 
-fig = plt.figure(1, figsize=(8, 8))
+fig = plt.figure(1, figsize=(8, 10))
 m = Basemap(projection='merc', lon_0=stalon, lat_0=stalat, llcrnrlon=stalon-5, 
             llcrnrlat=stalat-2, urcrnrlon=stalon+3, urcrnrlat=stalat+10, epsg=4269, resolution="i")
 
@@ -61,22 +61,36 @@ max_size_ = max(mags) + 1
 frac = [(0.2 + (_i - min_size_)) / (max_size_ - min_size_) for _i in mags]
 size_plot = [(_i * (max_size - min_size)) ** 2 for _i in frac]
 
+mags2 = [2., 2.5, 3., 3.5, 4., 4.5]
+frac2 = [(0.2 + (_i - min_size_)) / (max_size_ - min_size_) for _i in mags2]
+size_plot2 = [(_i * (max_size - min_size)) ** 2 for _i in frac2]
+
+mymap=plt.get_cmap('viridis')
+mycolor= mymap(frac2)
 x,y = m(stalon-1.,stalat-1.5)
 x2,y2 = m(stalon+2.5,stalat+1.5)
 from matplotlib.patches import Polygon
 p = Polygon([(x,y),(x,y2),(x2,y2),(x2,y)], facecolor='w',edgecolor='k') 
 plt.gca().add_patch(p) 
 x,y =m(lons,lats)
-sc= m.scatter(x, y, s=size_plot, c=mags, zorder =3)
-cb=plt.colorbar(sc, orientation="horizontal",fraction=0.046, pad=0.04)
-cb.set_label('Event Magnitude ($M_L$)')
+sc= m.scatter(x, y, s=size_plot, c=mags, zorder =3, cmap='viridis')
+print(mags)
+#cb=plt.colorbar(sc, orientation="horizontal",fraction=0.046, pad=0.04)
+#cb.set_label('Event Magnitude ($M_L$)')
+for mag, siz, f2,cc in zip(mags2,size_plot2, frac2, mycolor):
+    sc2 = m.scatter([0.] ,[0.],s=siz ,c=cc,  cmap='viridis', zorder=3, label='$M_L$' + str(mag))
+plt.legend(loc=9, ncol=3, bbox_to_anchor=(0.5,-0.01))
 
-cb.set_ticks([2.,3.,4.,5.])
-cb.set_ticklabels([2.,3.,4.,5.])
+#for mag in mags2:
+#    sc2 = m.scatter(0.,0.,mag,label='$M_L$' + str(int(mag)))
+#plt.legend()
+
+#cb.set_ticks([2.,3.,4.,5.])
+#cb.set_ticklabels([2.,3.,4.,5.])
 x,y =m(stalon, stalat)
 
 m.scatter(x,y, 200, color="r", edgecolor="r", marker="v", zorder=3)
-x,y =m(stalon+.15, stalat-.1)
+x,y =m(stalon+.15, stalat-.05)
 #plt.text(x,y,'OKR1', va="top", family="monospace", weight="bold", color="r")
 
 
@@ -86,6 +100,7 @@ from mpl_toolkits.axes_grid.anchored_artists import AnchoredSizeBar
 axins = zoomed_inset_axes(ax, 2, loc=2) # zoom = 4
 x,y =m(lons,lats)
 sc= m.scatter(x, y, s=size_plot, c=mags, zorder =3)
+
 x,y = m(stalon-1.,stalat-1.5)
 x2,y2 = m(stalon+2.5,stalat+1.5)
 axins.set_xlim(x,x2)
@@ -98,6 +113,7 @@ m.scatter(x,y, 200, color="r", edgecolor="r", marker="v", zorder=3)
 x,y =m(stalon+.1, stalat-.2)
 plt.text(x,y,'OKR1', va="top", family="monospace", weight="bold", color="r")
 m.drawcounties()
+
 
 m.drawmapboundary()
 m.drawstates(linewidth=1., zorder=3.)
